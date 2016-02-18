@@ -1,7 +1,9 @@
 var drawingCanvas;
 var draw;
-var maxx = 416;
-var maxy = 352;
+var tilew = 32;
+var tileh = 32
+var maxx = 10;
+var maxy = 8;
 var then;
 
 
@@ -18,9 +20,9 @@ imgBg.onload = function () {
 imgBg.src = "images/background.png";
 
 var hero = {
-	speed: 80,
-	x: 0,
-	y: 0
+	speed: 2.5,
+	x: 0.0,
+	y: 8.0
 };
 
 var keysDown = {};
@@ -28,40 +30,34 @@ var keysDown = {};
 
 
 var reset = function () {
-	hero.x = 32;
-	hero.y = 32;
+	hero.x = 0;
+	hero.y = maxy;
 }
 
 var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
 		hero.y -= hero.speed * modifier;
+		if (hero.y<=0) { hero.y=0; }
 	}
 	if (40 in keysDown) { // Player holding down
 		hero.y += hero.speed * modifier;
+		if (hero.y>=maxy) { hero.y=maxy; }
 	}
 	if (37 in keysDown) { // Player holding left
 		hero.x -= hero.speed * modifier;
+		if (hero.x<=0) { hero.x=0; }
 	}
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
+		if (hero.x>=maxx) { hero.x=maxx; }
 	}
-
-
 };
 
 var render = function () {
 	bg();
-	draw.drawImage(imgHero,hero.x, hero.y);
+	draw.drawImage(imgHero,tilew*(1+hero.x), tileh*(1+hero.y));
 
 };
-
-function test() {
-	draw.beginPath();
-	draw.moveTo(0,0);
-	draw.lineTo(maxx,maxy);
-	draw.stroke(); 
-	draw.drawImage(img_grass,100,10,32,32);
-}
 
 function isOdd(num) { return num % 2;}
 
