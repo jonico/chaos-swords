@@ -36,20 +36,32 @@ var reset = function () {
 
 var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
-		hero.y -= hero.speed * modifier;
-		if (hero.y<=0) { hero.y=0; }
+		if (!isBlocked(hero.x,hero.y-1))
+		{
+		 hero.y -= hero.speed * modifier;
+		 if (hero.y<=0) { hero.y=0; }
+		}
 	}
 	if (40 in keysDown) { // Player holding down
-		hero.y += hero.speed * modifier;
-		if (hero.y>=maxy) { hero.y=maxy; }
+		if (!isBlocked(hero.x,hero.y+1))
+		{
+  		 hero.y += hero.speed * modifier;
+		 if (hero.y>=maxy) { hero.y=maxy; }
+		}
 	}
 	if (37 in keysDown) { // Player holding left
-		hero.x -= hero.speed * modifier;
-		if (hero.x<=0) { hero.x=0; }
+		if (!isBlocked(hero.x-1,hero.y))
+		{
+ 		 hero.x -= hero.speed * modifier;
+		 if (hero.x<=0) { hero.x=0; }
+		}
 	}
 	if (39 in keysDown) { // Player holding right
-		hero.x += hero.speed * modifier;
-		if (hero.x>=maxx) { hero.x=maxx; }
+		if (!isBlocked(hero.x+1,hero.y))
+		{
+		 hero.x += hero.speed * modifier;
+		 if (hero.x>=maxx) { hero.x=maxx; }
+		}
 	}
 };
 
@@ -60,24 +72,18 @@ var render = function () {
 };
 
 function isOdd(num) { return num % 2;}
+function isEven(num) { return !isOdd(num); }
+
+
+function isBlocked(x,y) {
+	if (isOdd(Math.round(x*10)/10) && isOdd(Math.round(y*10)/10))
+		return true;
+	return false;
+}
 
 function bg()
 {
 	draw.drawImage(imgBg,0,0);
-/*
-	for (x=0;x<=12;x++)
-	{
-	  for (y=0; y<=10; y++)
-	  {
-	    if (x<1 || y<1 || x>11  || y>9)
-	    draw.drawImage(img_stone,x*32,y*32,32,32);
-	    else if (isOdd(x) || isOdd(y))
-	    draw.drawImage(imgGrass,x*32,y*32,32,32);
-	    else
-	    draw.drawImage(img_stone,x*32,y*32,32,32);
-	  }	 
-	}
-*/
 }
 
 var main = function () {
