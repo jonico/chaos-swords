@@ -5,9 +5,6 @@ var tileh = 32
 var maxx = 10;
 var maxy = 8;
 var then;
-
-
-
 var imgReady = false;
 
 var imgHero = new Image();
@@ -26,7 +23,6 @@ var hero = {
 };
 
 var keysDown = {};
-
 
 
 var reset = function () {
