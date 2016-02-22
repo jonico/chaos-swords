@@ -6,6 +6,7 @@ var maxx = 10;
 var maxy = 8;
 var then;
 var imgReady = false;
+var attackDuration = 1000;
 
 var imgHero = new Image();
 imgHero.src = "images/hero.png";
@@ -16,25 +17,42 @@ imgBg.onload = function () {
 };
 imgBg.src = "images/background.png";
 
-var hero = {
-	speed: 2.5,
-	x: 0.0,
-	y: 8.0
-};
+function Hero(x,y,role) {
+	this.speed = 2.5;
+	this.dir = 0;
+	  this.x=x;
+	  this.y=y;
+	  this.role=role;
+	this.moving = 0;
+	this.lastAttack= 0;
+
+	this.attack = function() { this.lastAttack = Date.now(); };
+
+	this.secSinceLastAttack = function() { return Date.now() - this.lastAttack; };
+
+	this.isAttacking = function() {
+	  return this.secSinceLastAttack()<attackDuration;
+	};
+}
+
+var hero = new Hero(0,maxy-1,"fighter");
 
 var keysDown = {};
 
 
 var reset = function () {
 	hero.x = 0;
-	hero.y = maxy;
+	hero.y = maxy-1;
 }
 
 var update = function (modifier) {
+	stillmoving = 0;
 	if (38 in keysDown) { // Player holding up
 		if (!isBlocked(hero.x,hero.y-1))
 		{
 		 hero.y -= hero.speed * modifier;
+		 hero.dir = 0;
+		 stillmoving = 1;
 		 if (hero.y<=0) { hero.y=0; }
 		}
 	}
@@ -42,6 +60,8 @@ var update = function (modifier) {
 		if (!isBlocked(hero.x,hero.y+1))
 		{
   		 hero.y += hero.speed * modifier;
+		 hero.dir = 2;
+		 stillmoving = 1;
 		 if (hero.y>=maxy) { hero.y=maxy; }
 		}
 	}
@@ -49,6 +69,8 @@ var update = function (modifier) {
 		if (!isBlocked(hero.x-1,hero.y))
 		{
  		 hero.x -= hero.speed * modifier;
+		 hero.dir = 3;
+		 stillmoving = 1;
 		 if (hero.x<=0) { hero.x=0; }
 		}
 	}
@@ -56,15 +78,46 @@ var update = function (modifier) {
 		if (!isBlocked(hero.x+1,hero.y))
 		{
 		 hero.x += hero.speed * modifier;
+		 hero.dir = 1;
+		 stillmoving = 1;
 		 if (hero.x>=maxx) { hero.x=maxx; }
 		}
 	}
+	if (32 in keysDown) { // Player attacking
+		if (!hero.isAttacking())
+		{
+		  hero.attack();	
+		}	
+	}
+	if (stillmoving) 
+	 hero.moving+=modifier*5;
+	else
+	 hero.moving=0;
 };
+
+var fullscreen = function() {
+	if (drawingCanvas.requestFullscreen) {
+		drawingCanvas.requestFullscreen();
+	} else if (drawingCanvas.webkitRequestFullscreen) {
+		drawingCanvas.webkitRequestFullscreen();
+	} else if (drawingCanvas.mozRequestFullScreen) {
+		drawingCanvas.mozRequestFullScreen();
+	} else if (drawingCanvas.msRequestFullscreen) {
+		drawingCanvas.msRequestFullscreen();
+	}
+}
 
 var render = function () {
 	bg();
-	draw.drawImage(imgHero,tilew*(1+hero.x), tileh*(1+hero.y));
-
+	movstate = Math.floor(hero.moving) % 4;
+	if (isEven(movstate)) anim=0
+	else anim=((movstate-1)/2)+1; 
+	if (hero.secSinceLastAttack()<500)
+	{
+	  draw.drawImage(imgHero,3*hero.dir*tilew,tileh,3*tilew,3*tileh,tilew*(1+hero.x)-tilew, tileh*(1+hero.y)-tileh,tilew*3,tileh*3);
+	} else {
+	  draw.drawImage(imgHero,3*hero.dir*32+32*anim,0,32,32,tilew*(1+hero.x), tileh*(1+hero.y),32,32);
+	}
 };
 
 function isOdd(num) { return num % 2;}
