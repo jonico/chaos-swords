@@ -47,53 +47,53 @@ var reset = function () {
 }
 
 var update = function (modifier) {
-	stillmoving = 0;
-	if (38 in keysDown) { // Player holding up
-		if (!isBlocked(hero.x,hero.y-1))
-		{
-		 hero.y -= hero.speed * modifier;
-		 hero.dir = 0;
-		 stillmoving = 1;
-		 if (hero.y<=0) { hero.y=0; }
+	if (!hero.isAttacking())
+	{
+		stillmoving = 0;
+		if (38 in keysDown) { // Player holding up
+			if (!isBlocked(hero.x,hero.y-1))
+			{
+			 hero.y -= hero.speed * modifier;
+			 hero.dir = 0;
+			 stillmoving = 1;
+			 if (hero.y<=0) { hero.y=0; }
+			}
 		}
-	}
-	if (40 in keysDown) { // Player holding down
-		if (!isBlocked(hero.x,hero.y+1))
-		{
-  		 hero.y += hero.speed * modifier;
-		 hero.dir = 2;
-		 stillmoving = 1;
-		 if (hero.y>=maxy) { hero.y=maxy; }
+		if (40 in keysDown) { // Player holding down
+			if (!isBlocked(hero.x,hero.y+1))
+			{
+	  		 hero.y += hero.speed * modifier;
+			 hero.dir = 2;
+			 stillmoving = 1;
+			 if (hero.y>=maxy) { hero.y=maxy; }
+			}
 		}
-	}
-	if (37 in keysDown) { // Player holding left
-		if (!isBlocked(hero.x-1,hero.y))
-		{
- 		 hero.x -= hero.speed * modifier;
-		 hero.dir = 3;
-		 stillmoving = 1;
-		 if (hero.x<=0) { hero.x=0; }
+		if (37 in keysDown) { // Player holding left
+			if (!isBlocked(hero.x-1,hero.y))
+			{
+	 		 hero.x -= hero.speed * modifier;
+			 hero.dir = 3;
+			 stillmoving = 1;
+			 if (hero.x<=0) { hero.x=0; }
+			}
 		}
-	}
-	if (39 in keysDown) { // Player holding right
-		if (!isBlocked(hero.x+1,hero.y))
-		{
-		 hero.x += hero.speed * modifier;
-		 hero.dir = 1;
-		 stillmoving = 1;
-		 if (hero.x>=maxx) { hero.x=maxx; }
+		if (39 in keysDown) { // Player holding right
+			if (!isBlocked(hero.x+1,hero.y))
+			{
+			 hero.x += hero.speed * modifier;
+			 hero.dir = 1;
+			 stillmoving = 1;
+			 if (hero.x>=maxx) { hero.x=maxx; }
+			}
 		}
-	}
-	if (32 in keysDown) { // Player attacking
-		if (!hero.isAttacking())
-		{
+		if (32 in keysDown) { // Player attacking
 		  hero.attack();	
-		}	
+		}
+		if (stillmoving) 
+		 hero.moving+=modifier*5;
+		else
+		 hero.moving=0;
 	}
-	if (stillmoving) 
-	 hero.moving+=modifier*5;
-	else
-	 hero.moving=0;
 };
 
 var fullscreen = function() {
