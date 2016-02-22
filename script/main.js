@@ -8,8 +8,9 @@ var then;
 var imgReady = false;
 var attackDuration = 1000;
 
-var imgHero = new Image();
-imgHero.src = "images/hero.png";
+
+var heroTiles = { "fighter": new Image() };
+heroTiles["fighter"].src = "images/hero.png";
 
 var imgBg = new Image();
 imgBg.onload = function () {
@@ -20,9 +21,9 @@ imgBg.src = "images/background.png";
 function Hero(x,y,role) {
 	this.speed = 2.5;
 	this.dir = 0;
-	  this.x=x;
-	  this.y=y;
-	  this.role=role;
+	this.x=x;
+	this.y=y;
+	this.role=role;
 	this.moving = 0;
 	this.lastAttack= 0;
 
@@ -114,9 +115,9 @@ var render = function () {
 	else anim=((movstate-1)/2)+1; 
 	if (hero.secSinceLastAttack()<500)
 	{
-	  draw.drawImage(imgHero,3*hero.dir*tilew,tileh,3*tilew,3*tileh,tilew*(1+hero.x)-tilew, tileh*(1+hero.y)-tileh,tilew*3,tileh*3);
+	  draw.drawImage(heroTiles[hero.role],3*hero.dir*tilew,tileh,3*tilew,3*tileh,tilew*(1+hero.x)-tilew, tileh*(1+hero.y)-tileh,tilew*3,tileh*3);
 	} else {
-	  draw.drawImage(imgHero,3*hero.dir*32+32*anim,0,32,32,tilew*(1+hero.x), tileh*(1+hero.y),32,32);
+	  draw.drawImage(heroTiles[hero.role],3*hero.dir*32+32*anim,0,32,32,tilew*(1+hero.x), tileh*(1+hero.y),32,32);
 	}
 };
 
