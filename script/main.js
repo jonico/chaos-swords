@@ -10,8 +10,10 @@ var imgReady = false;
 var attackDuration = 1000;
 
 
-var heroTiles = { "fighter": new Image() };
-heroTiles["fighter"].src = "images/hero.png";
+var heroTiles = { "fighter": new Image(), "mage": new Image() };
+heroTiles["fighter"].src = "images/fighter_anim.png";
+heroTiles["mage"].src = "images/mage_anim.png";
+
 var gameTiles = { "tree": new Image() };
 gameTiles.tree.src = "images/tree.png";
 var imgBg = new Image();
@@ -20,7 +22,7 @@ imgBg.onload = function () {
 };
 imgBg.src = "images/background.png";
 
-function Hero(x,y,role) {
+function Hero(x,y,role,keyset) {
 	this.speed = 2.5;
 	this.dir = 0;
 	this.x=x;
@@ -28,6 +30,7 @@ function Hero(x,y,role) {
 	this.role=role;
 	this.moving = 0;
 	this.lastAttack= 0;
+	this.keyset = keyset;
 
 	this.attack = function() { this.lastAttack = Date.now(); };
 
@@ -54,7 +57,7 @@ function Hero(x,y,role) {
 	{
 		map.unset(this.x,this.y);
 		stillmoving = 0;
-		if (38 in keysDown) { // Player holding up
+		if (this.keyset[0] in keysDown) { // Player holding up
 			if (!isBlocked(this.x,this.y-1))
 			{
 			 this.y -= this.speed * modifier;
@@ -63,25 +66,7 @@ function Hero(x,y,role) {
 			 if (this.y<=0) { this.y=0; }
 			}
 		}
-		if (40 in keysDown) { // Player holding down
-			if (!isBlocked(this.x,this.y+1))
-			{
-	  		 this.y += this.speed * modifier;
-			 this.dir = 2;
-			 stillmoving = 1;
-			 if (this.y>=maxy) { this.y=maxy; }
-			}
-		}
-		if (37 in keysDown) { // Player holding left
-			if (!isBlocked(this.x-1,this.y))
-			{
-	 		 this.x -= this.speed * modifier;
-			 this.dir = 3;
-			 stillmoving = 1;
-			 if (this.x<=0) { this.x=0; }
-			}
-		}
-		if (39 in keysDown) { // Player holding right
+		if (this.keyset[1] in keysDown) { // Player holding right
 			if (!isBlocked(this.x+1,this.y))
 			{
 			 this.x += this.speed * modifier;
@@ -90,7 +75,25 @@ function Hero(x,y,role) {
 			 if (this.x>=maxx) { this.x=maxx; }
 			}
 		}
-		if (32 in keysDown) { // Player attacking
+		if (this.keyset[2] in keysDown) { // Player holding down
+			if (!isBlocked(this.x,this.y+1))
+			{
+	  		 this.y += this.speed * modifier;
+			 this.dir = 2;
+			 stillmoving = 1;
+			 if (this.y>=maxy) { this.y=maxy; }
+			}
+		}
+		if (this.keyset[3] in keysDown) { // Player holding left
+			if (!isBlocked(this.x-1,this.y))
+			{
+	 		 this.x -= this.speed * modifier;
+			 this.dir = 3;
+			 stillmoving = 1;
+			 if (this.x<=0) { this.x=0; }
+			}
+		}
+		if (this.keyset[4] in keysDown) { // Player attacking
 		  this.attack();	
 		}
 		if (stillmoving) 
@@ -157,7 +160,7 @@ function Map() {
 }
 
 var map = new Map();
-var players = [new Hero(0,maxy-1,"fighter"),new Hero(maxx-1,0,"fighter")];
+var players = [new Hero(0,maxy-1,"fighter",[38,39,40,37,32]),new Hero(maxx-1,0,"mage",[104,102,101,100,13])];
 var trees = [new Tree(4,4)];
 
 var keysDown = {};
