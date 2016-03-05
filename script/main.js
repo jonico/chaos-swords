@@ -197,9 +197,6 @@ var render = function () {
 	};
 };
 
-function isOdd(num) { return num % 2;}
-function isEven(num) { return !isOdd(num); }
-
 
 function isBlocked(x,y) {
 	if (isOdd(Math.round(x*10)/10) && isOdd(Math.round(y*10)/10))
