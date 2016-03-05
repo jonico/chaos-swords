@@ -10,9 +10,10 @@ var imgReady = false;
 var attackDuration = 1000;
 
 
-var heroTiles = { "fighter": new Image(), "mage": new Image() };
+var heroTiles = { "fighter": new Image(), "mage": new Image(),  "thief": new Image()};
 heroTiles["fighter"].src = "images/fighter_anim.png";
 heroTiles["mage"].src = "images/mage_anim.png";
+heroTiles["thief"].src = "images/thief_anim.png";
 
 var gameTiles = { "tree": new Image() };
 gameTiles.tree.src = "images/tree.png";
@@ -93,13 +94,17 @@ function Hero(x,y,role,keyset) {
 			 if (this.x<=0) { this.x=0; }
 			}
 		}
-		if (this.keyset[4] in keysDown) { // Player attacking
+		if (this.keyset[4] in keysDown) { // Player attacking 
 		  this.attack();	
+		  this.moving=0;
 		}
-		if (stillmoving) 
+		if (stillmoving || this.moving>0) { 
 		 this.moving+=modifier*5;
-		else
-		 this.moving=0;
+		}
+		if (!stillmoving && Math.floor(this.moving % 4)==0)
+		{
+			this.moving=0;
+		}
 		map.set(this.x,this.y,this);
 	}
   }
