@@ -108,7 +108,6 @@ function Hero(x,y,role,keyset) {
 		map.set(this.x,this.y,this);
 	}
   }
-
 }
 
 function Tree(x,y) {
