@@ -59,7 +59,7 @@ function Hero(x,y,role,keyset) {
 		map.unset(this.x,this.y);
 		stillmoving = 0;
 		if (this.keyset[0] in keysDown) { // Player holding up
-			if (!isBlocked(this.x,this.y-1))
+			if (!isBlocked(this.x,Math.floor(this.y)))
 			{
 			 this.y -= this.speed * modifier;
 			 this.dir = 0;
@@ -68,7 +68,7 @@ function Hero(x,y,role,keyset) {
 			}
 		}
 		if (this.keyset[1] in keysDown) { // Player holding right
-			if (!isBlocked(this.x+1,this.y))
+			if (!isBlocked(Math.ceil(this.x),this.y))
 			{
 			 this.x += this.speed * modifier;
 			 this.dir = 1;
@@ -77,7 +77,7 @@ function Hero(x,y,role,keyset) {
 			}
 		}
 		if (this.keyset[2] in keysDown) { // Player holding down
-			if (!isBlocked(this.x,this.y+1))
+			if (!isBlocked(this.x,Math.ceil(this.y)))
 			{
 	  		 this.y += this.speed * modifier;
 			 this.dir = 2;
@@ -86,7 +86,7 @@ function Hero(x,y,role,keyset) {
 			}
 		}
 		if (this.keyset[3] in keysDown) { // Player holding left
-			if (!isBlocked(this.x-1,this.y))
+			if (!isBlocked(Math.floor(this.x),this.y))
 			{
 	 		 this.x -= this.speed * modifier;
 			 this.dir = 3;
@@ -157,7 +157,7 @@ function Map() {
 	};
 
 	this.get = function(x,y) {
-		if (x<0 || y<0 || x>=maxx || y>=maxy) return "stone";
+		if (x<0 || y<0 || x>maxx || y>maxy) return "stone";
 		return this.world[Math.round(y)][Math.round(x)];
 	};
 
